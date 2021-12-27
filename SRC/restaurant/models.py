@@ -4,17 +4,12 @@ from django.core.validators import MinValueValidator
 
 from accounts.models import RestaurantManager
 
-
-# inja ro to erd taghir bedam
 class Address(models.Model):
     city = models.CharField(max_length=60)
     street = models.CharField(max_length=60)
     plaque = models.IntegerField(validators=[MinValueValidator(1)])
-    #
     customer_id = models.ManyToManyField("accounts.Customer", related_name="customer_address")
-    #
-    restaurant_manager_id = models.ForeignKey("accounts.RestaurantManager", on_delete=models.CASCADE,related_name="restaurant_address")
-   
+    
 
     def __str__(self):
         return self.city+"_"+self.street
@@ -40,13 +35,12 @@ class Meal(models.Model):
 class Branch(models.Model):
     # inja ham taghir bedam to erd
     name = models.CharField(max_length=60)
-    # city =models.CharField(max_length=60)
-    # street = models.CharField(max_length=60)
+    city =models.CharField(max_length=60)
+    address = models.CharField(max_length=60)
     description = models.CharField(max_length=300, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     restaurant = models.ForeignKey(Restaurnt, on_delete=models.CASCADE, related_name = "restuarant_branch" )
-    manager_restaurant = models.ForeignKey("accounts.RestaurantManager",on_delete=models.CASCADE,related_name = "manager_branch" )
-    #
+    manager_restaurant = models.OneToOneField("accounts.RestaurantManager",on_delete=models.CASCADE,related_name = "manager_branch" )
     branch_category = models.ForeignKey(Category, on_delete=models.CASCADE,related_name = "category_branch" )
     
     def __str__(self):

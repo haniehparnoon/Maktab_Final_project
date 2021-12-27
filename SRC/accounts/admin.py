@@ -10,9 +10,8 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = ['email','username','is_staff','is_superuser']
     list_editable = ['username',]
     empty_value_display = 'empty'
-    list_filter = ['first_name','email']
+    list_filter = ['email']
     search_fields = ('username','email')
-    date_directly = ['date_joined']
     list_per_page = 5
 
 @admin.register(Admin)
@@ -22,9 +21,8 @@ class CustomAdmin(admin.ModelAdmin):
     list_editable = ['username']
     empty_value_display = 'empty'
     list_display_links = ['email']
-    list_filter = ['first_name','email']
+    list_filter = ['email']
     search_fields = ('username','email')
-    date_directly = ['date_joined']
     list_per_page = 5
 
     def get_queryset(self, request):
@@ -34,13 +32,12 @@ class CustomAdmin(admin.ModelAdmin):
 @admin.register(RestaurantManager)
 class CustomRestaurantManager(admin.ModelAdmin):
     model = Admin
-    list_display = ["id",'email','username','first_name','last_name']
+    list_display = ["id",'email','username']
     list_editable = ['username']
     empty_value_display = 'empty'
     list_display_links = ['email']
-    list_filter = ['first_name','email']
+    list_filter = ['email']
     search_fields = ('username','email')
-    date_directly = ['date_joined']
     list_per_page = 5
 
     def get_queryset(self, request):
@@ -49,11 +46,11 @@ class CustomRestaurantManager(admin.ModelAdmin):
 @admin.register(Customer)
 class CustomCustomer(admin.ModelAdmin):
     model = Admin
-    list_display = ["id",'email','username','first_name','last_name']
+    list_display = ["id",'email','username']
     list_editable = ['username']
     empty_value_display = 'empty'
     list_display_links = ['email']
-    list_filter = ['first_name','email']
+    list_filter = ['email']
     search_fields = ('username','email')
     date_directly = ['date_joined']
     list_per_page = 5

@@ -33,7 +33,6 @@ class Meal(models.Model):
     
 
 class Branch(models.Model):
-    # inja ham taghir bedam to erd
     name = models.CharField(max_length=60)
     city =models.CharField(max_length=60)
     address = models.CharField(max_length=60)
@@ -64,8 +63,7 @@ class Menu(models.Model):
     quantity = models.IntegerField()
     food = models.ForeignKey(Food, on_delete=models.CASCADE,related_name = "food_menu" )
     
-    def __str__(self):
-        return self.food
+    
 
 class OrderStatus(models.Model):
     status = models.CharField(max_length=50)
@@ -79,16 +77,13 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     status_id = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, related_name='status_order')
     
-    
-    def __str__(self):
-        return self.status
+   
 
 class OrderItem(models.Model):
     quantity = models.IntegerField()
-    menu_id = models.ManyToManyField(Menu, related_name="menu_order_item")
+    menu_id = models.ForeignKey(Menu,on_delete=models.CASCADE, related_name="menu_order_item")
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     
-    def __str__(self) :
-        return self.menu_id
+   
    
     

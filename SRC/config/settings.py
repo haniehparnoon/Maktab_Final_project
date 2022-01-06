@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     'crispy_forms',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'accounts',
     'restaurant',
 ]
 AUTH_USER_MODEL = 'accounts.CustomUser' 
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -136,7 +138,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = "/wherenext/"
 ACCOUNT_LOGOUT_REDIRECT = 'home'
 SITE_ID = 1
 AUTHENTICATION_BACKENDS = (

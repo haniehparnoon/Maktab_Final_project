@@ -67,3 +67,11 @@ class BranchList(ListView):
         data['best_selling_foods'] = best_selling_foods
         data['best_selling_restaurants'] = best_selling_restaurants
         return data
+
+class menuRestaurant(ListView):
+    model = Menu
+      
+    template_name = 'restaurant\menurestaurant.html'
+    def get_queryset(self, *args, **kwargs):
+       # print(Menu.objects.filter(branch=self.kwargs['pk']))
+        return Menu.objects.filter(branch=self.kwargs['pk'])

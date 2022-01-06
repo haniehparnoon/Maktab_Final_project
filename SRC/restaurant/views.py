@@ -116,6 +116,12 @@ def cart(request):
         print(order) 
     context = {'order':order}
     return render(request,'restaurant/cart.html',context)
+
+class OrderItemDelete(DeleteView):
+    model = OrderItem
+    template_name = 'restaurant\orderitem_delete.html'
+    success_url = reverse_lazy('cart')
+
 	
 
 

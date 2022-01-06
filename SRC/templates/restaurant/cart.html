@@ -1,8 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{{order.orderitem_set.all}}
-{meoww}
 
+
+<br>
+<h1>Cart</h1>
+{% for orderitem in order.orderitem_set.all %}
+<div class="row">
+	<div class="col-lg-6">
+		<img style="border:1px solid #888; width:200px ;height:200px;" src="{{orderitem.menu_id.food.image.url}}">
+	</div>
+
+	<div style="padding:50px" class="col-lg-6">
+
+		<h3>{{orderitem.menu_id.food.name}}</h3>
+		<hr>
+		<h2>Price: {{orderitem.menu_id.price}}</h2>
+		<h3>Quantity: {{orderitem.quantity}}</h3>  
+		
+		<a href="{% url 'orderitem_delete' orderitem.pk %}" class="btn btn-danger">DELET</a>
+		
+		{% comment %} <form method="POST" action="{% url 'menu_item' food.id %}">
+			{% csrf_token %}
+			<input min="1" value=1 type="number" name="quantity">
+			<input class="btn btn-dark" type="submit" value="Add to Cart">
+		</form>
+		<a href="{% url 'food_edit' food.pk %}" class="btn btn-primary">Edit</a>
+		 {% endcomment %}
+
+	</div>
+</div>
+<hr>
+{% endfor %}
 
 {% endblock content %}

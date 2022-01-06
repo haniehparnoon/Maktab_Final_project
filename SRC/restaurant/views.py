@@ -75,3 +75,33 @@ class menuRestaurant(ListView):
     def get_queryset(self, *args, **kwargs):
        # print(Menu.objects.filter(branch=self.kwargs['pk']))
         return Menu.objects.filter(branch=self.kwargs['pk'])
+
+
+def menu_item(request,pk):
+    food = Menu.objects.get(id = pk)
+    if request.method == "POST":
+        food = Menu.objects.get(id = pk)
+        try:
+            customer = request.user
+        except:
+            device = request.COOKIES['device']
+            customer, created = Customer.objects.get_or_create(device=device)    
+        if food.quantity >= int(request.POST['quantity']):
+            addressuser, created = AddressUser.objects.get_or_create(customer = customer)
+            status = OrderStatus.objects.get(status = "ordered")
+            order, created = Order.objects.get_or_create(customer_id = addressuser, status_id =status)
+            orderItem, created = OrderItem.objects.get_or_create(order_id=order, menu_id=food, quantity=1 )
+            orderItem.quantity = request.POST['quantity']
+            orderItem.save()
+            return redirect('home')
+        else:
+            context = {'food':food, 'message':"Sorry :/"}
+            return(request,'restaurant\menu_item.html',context)    
+    context = {'food':food}
+    return render(request,'restaurant\menu_item.html', context)
+
+
+
+
+
+

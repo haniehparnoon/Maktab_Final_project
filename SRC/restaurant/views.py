@@ -101,6 +101,25 @@ def menu_item(request,pk):
     return render(request,'restaurant\menu_item.html', context)
 
 
+def cart(request):
+    #device = request.COOKIES['device']
+    #orderItems = OrderItem.objects.filter(order_id__customer_id__customer__email =device)  
+    try:
+        customer = request.user
+        status = OrderStatus.objects.get(status = "ordered")
+        order, created = Order.objects.get_or_create(customer_id__customer = customer, status_id =status)
+    except:
+        device = request.COOKIES['device']
+        customer, created = Customer.objects.get_or_create(device = device)
+        print("ccccccccccccccccc",customer)
+        addressuser, created = AddressUser.objects.get_or_create(customer = customer)    
+        status = OrderStatus.objects.get(status = "ordered")
+        order, created = Order.objects.get_or_create(customer_id = addressuser, status_id =status)
+    print(order.__dict__)   
+    context = {'order':order}
+    return render(request,'restaurant/cart.html',context)
+	
+
 
 
 

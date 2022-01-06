@@ -28,8 +28,8 @@ class Address(models.Model):
              
 
 class AddressUser(models.Model):
-    address = models.ForeignKey(Address, on_delete = models.CASCADE,null = True, blank=True) 
-    customer = models.ForeignKey("accounts.Customer", on_delete = models.CASCADE)
+    address = models.ForeignKey(Address, on_delete = models.SET_NULL,null = True, blank=True) 
+    customer = models.ForeignKey("accounts.Customer", on_delete = models.CASCADE, null = True, blank=True)
     def __str__(self):
         if self.customer.email :
             return self.customer.email 

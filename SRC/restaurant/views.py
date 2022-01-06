@@ -9,6 +9,7 @@ from .decorators import superuser_required, is_staff_required, customer_required
 from django.db.models.aggregates import Count, Sum
 from .forms import FoodForm, CategoryForm
 import jdatetime
+from django.db.models import Q
 
 # Create your views here.
 @superuser_required()
@@ -58,10 +59,12 @@ class BranchList(ListView):
 
     def get_context_data(self, **kwargs):
         #best-selling foods
-        foods = Food.objects.filter(food_menu__menu_order_item__order_id__status_id__status__contains='complete')
+        foods = Food.objects.filter(Q(food_menu__menu_order_item__order_id__status_id__status__contains='complete')|
+        Q(food_menu__menu_order_item__order_id__status_id__status__contains='sent')|
+        Q(food_menu__menu_order_item__order_id__status_id__status__contains='delivered') )
         best_selling_foods = foods.annotate(total= Sum('food_menu__menu_order_item__quantity')).order_by('-total')[:10]   
         #best-selling restaurants
-        branches = Branch.objects.filter(menu__menu_order_item__order_id__status_id__status__contains='complete')
+        branches = Branch.objects.filter(Q(menu__menu_order_item__order_id__status_id__status__contains='complete')|Q(menu__menu_order_item__order_id__status_id__status__contains='sent')|Q(menu__menu_order_item__order_id__status_id__status__contains='delivered'))
         best_selling_restaurants=branches.annotate(total = Sum('menu__menu_order_item__quantity')).order_by('-total')[:10]
         data = super().get_context_data(**kwargs)
         data['best_selling_foods'] = best_selling_foods

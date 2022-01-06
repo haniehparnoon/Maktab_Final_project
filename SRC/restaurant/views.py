@@ -36,3 +36,10 @@ class DeleteFood(DeleteView):
     model = Food
     template_name = 'restaurant\deletefood.html'
     success_url = reverse_lazy('Foods')
+
+@superuser_required()
+class AddCategory(CreateView):
+    model = Category
+    template_name = 'restaurant\category_add.html'
+    form_class = CategoryForm
+    success_url = reverse_lazy('Foods')

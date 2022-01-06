@@ -122,7 +122,11 @@ class OrderItemDelete(DeleteView):
     template_name = 'restaurant\orderitem_delete.html'
     success_url = reverse_lazy('cart')
 
-	
+class OrderItemEdit(UpdateView):
+    model = OrderItem
+    fields = ('quantity',)
+    template_name = 'restaurant\orderitem_edit.html'
+    success_url = reverse_lazy('cart')
 
 
 

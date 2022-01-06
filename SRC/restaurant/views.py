@@ -23,8 +23,9 @@ class FoodList(ListView):
     model = Food
     template_name = 'restaurant\Foods.html'
 
-
-
-
-
-
+@superuser_required()
+class EditFood(UpdateView):
+    model = Food
+    form_class = FoodForm
+    template_name = 'restaurant\editfood.html'
+    success_url = reverse_lazy('Foods')

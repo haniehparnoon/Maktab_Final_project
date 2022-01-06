@@ -51,3 +51,19 @@ class ManagerHome(TemplateView):
 @customer_required()
 class CustomerHome(TemplateView):
     template_name = 'restaurant\customer_home.html'  
+
+class BranchList(ListView):
+    model = Branch
+    template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        #best-selling foods
+        foods = Food.objects.filter(food_menu__menu_order_item__order_id__status_id__status__contains='complete')
+        best_selling_foods = foods.annotate(total= Sum('food_menu__menu_order_item__quantity')).order_by('-total')[:10]   
+        #best-selling restaurants
+        branches = Branch.objects.filter(menu__menu_order_item__order_id__status_id__status__contains='complete')
+        best_selling_restaurants=branches.annotate(total = Sum('menu__menu_order_item__quantity')).order_by('-total')[:10]
+        data = super().get_context_data(**kwargs)
+        data['best_selling_foods'] = best_selling_foods
+        data['best_selling_restaurants'] = best_selling_restaurants
+        return data

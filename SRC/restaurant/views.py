@@ -29,3 +29,10 @@ class EditFood(UpdateView):
     form_class = FoodForm
     template_name = 'restaurant\editfood.html'
     success_url = reverse_lazy('Foods')
+
+
+@superuser_required()
+class DeleteFood(DeleteView):
+    model = Food
+    template_name = 'restaurant\deletefood.html'
+    success_url = reverse_lazy('Foods')

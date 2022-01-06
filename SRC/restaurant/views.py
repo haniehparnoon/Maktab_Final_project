@@ -43,3 +43,11 @@ class AddCategory(CreateView):
     template_name = 'restaurant\category_add.html'
     form_class = CategoryForm
     success_url = reverse_lazy('Foods')
+
+@is_staff_required()
+class ManagerHome(TemplateView):
+    template_name = 'restaurant\manager_home.html' 
+       
+@customer_required()
+class CustomerHome(TemplateView):
+    template_name = 'restaurant\customer_home.html'  

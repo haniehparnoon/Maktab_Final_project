@@ -18,3 +18,13 @@ class AdminHome(CreateView):
     form_class = FoodForm
     success_url = reverse_lazy('Foods')
 
+@superuser_required()
+class FoodList(ListView):
+    model = Food
+    template_name = 'restaurant\Foods.html'
+
+
+
+
+
+

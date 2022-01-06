@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+    {% for food in  object_list %}
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{food.image.url}}"  style="width: 179px;height: 179px;" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{food.name}}</h5>
+              <p class="card-text">description:{{food.description}}</p>
+              <p class="card-text">Meal Categories:</p>
+              {% for m  in food.meal_category.all  %}
+              <p><small>-{{m}}</small></p>
+              {% endfor %}
+              <a href="{% url 'food_edit' food.pk %}" class="btn btn-primary">Edit</a>
+              <a href="{% url 'food_delete' food.pk %}" class="btn btn-danger">DELET</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <br>
+   
+      {% endblock content %}

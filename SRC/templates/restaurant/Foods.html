@@ -16,6 +16,8 @@
               {% for m  in food.meal_category.all  %}
               <p><small>-{{m}}</small></p>
               {% endfor %}
+              <p class="card-text">description:{{food.description}}</p>
+              <p class="card-text">{{food.created_at_jalali.date}}</p>
               <a href="{% url 'food_edit' food.pk %}" class="btn btn-primary">Edit</a>
               <a href="{% url 'food_delete' food.pk %}" class="btn btn-danger">DELET</a>
             </div>

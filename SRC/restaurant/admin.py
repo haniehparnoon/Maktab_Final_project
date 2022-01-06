@@ -13,6 +13,6 @@ admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(Branch)
 admin.site.register(OrderStatus)
-admin.site.register(AddressUser)
+
 
 

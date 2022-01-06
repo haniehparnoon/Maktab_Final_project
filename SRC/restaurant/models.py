@@ -3,13 +3,15 @@ from django.forms.fields import ChoiceField
 from django.core.validators import MinValueValidator
 
 from accounts.models import RestaurantManager
-#from jdatetime
+import jdatetime
 
 class Address(models.Model):
-    city = models.CharField(max_length=60)
-    street = models.CharField(max_length=60)
-    plaque = models.IntegerField(validators=[MinValueValidator(1)])
-    customer_id = models.ManyToManyField("accounts.Customer", through = 'AddressUser')
+    city = models.CharField(max_length=60,blank=True,null=True)
+    street = models.CharField(max_length=60,blank=True,null=True)
+    plaque = models.IntegerField(validators=[MinValueValidator(1)],blank=True,null=True)
+    #customer_id = models.ManyToManyField("accounts.Customer", through = 'AddressUser')
+    customer_id = models.ForeignKey("accounts.Customer",on_delete=models.CASCADE)
+
     is_primary = models.BooleanField(default=False)
 
     def __str__(self):
@@ -27,14 +29,14 @@ class Address(models.Model):
         super(Address, self).save(*args, **kwargs)
              
 
-class AddressUser(models.Model):
-    address = models.ForeignKey(Address, on_delete = models.SET_NULL,null = True, blank=True) 
-    customer = models.ForeignKey("accounts.Customer", on_delete = models.CASCADE, null = True, blank=True)
-    def __str__(self):
-        if self.customer.email :
-            return self.customer.email 
-        else:
-            return "None"    
+# class AddressUser(models.Model):
+#     #address = models.ForeignKey(Address, on_delete = models.CASCADE,null = True, blank=True) 
+#     customer = models.ForeignKey("accounts.Customer", on_delete = models.CASCADE)
+#     def __str__(self):
+#         if self.customer.email :
+#             return self.customer.email 
+#         else:
+#             return "None"    
 
 class Restaurnt(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -61,7 +63,7 @@ class Meal(models.Model):
 
     def save(self, *args, **kwargs):
         self.name = self.name.lower()
-        return super(Category, self).save(*args, **kwargs)
+        return super(Meal, self).save(*args, **kwargs)
     def __str__(self):
         return self.name
     
@@ -90,9 +92,11 @@ class Branch(models.Model):
                 pass
         super(Branch, self).save(*args, **kwargs)
 
-    # @property 
-    # def created_at_jalali(self):
-    #     return jdatetime.datetime.fromgregorian(datetime= self.order_date)     
+    @property 
+    def created_at_jalali(self):
+        return jdatetime.datetime.fromgregorian(datetime= self.created)    
+
+     
 
 class Food(models.Model):
     name = models.CharField(max_length=60)
@@ -104,6 +108,10 @@ class Food(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property 
+    def created_at_jalali(self):
+        return jdatetime.datetime.fromgregorian(datetime= self.created)    
 
 
 class Menu(models.Model):
@@ -123,14 +131,18 @@ class OrderStatus(models.Model):
 
 
 class Order(models.Model): 
-    customer_id = models.ForeignKey(AddressUser, on_delete=models.CASCADE,related_name = "customer_order")
+    customer = models.ForeignKey("accounts.Customer", on_delete=models.CASCADE,related_name = "customer_order")
     created = models.DateTimeField(auto_now_add=True)
     status_id = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, related_name='status_order')
+    
     def __str__(self):
-        if self.customer_id.customer.email:
-            return self.customer_id.customer.email +"_"+self.status_id.status
+        if self.customer.email:
+            return self.customer.email +"_"+self.status_id.status
         else: 
-            return self.status_id.status   
+            return self.status_id.status 
+    @property 
+    def created_at_jalali(self):
+        return jdatetime.datetime.fromgregorian(datetime= self.created)          
    
 
 class OrderItem(models.Model):
@@ -138,8 +150,8 @@ class OrderItem(models.Model):
     menu_id = models.ForeignKey(Menu,on_delete=models.CASCADE, related_name="menu_order_item")
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     def __str__(self) :
-        if self.order_id.customer_id.customer.email: 
-            return self.menu_id.food.name +"_"+ self.order_id.customer_id.customer.email +"_"+str(self.quantity)
+        if self.order_id.customer.email: 
+            return self.menu_id.food.name +"_"+ self.order_id.customer.email +"_"+str(self.quantity)
         else: 
             return self.menu_id.food.name +"_"+str(self.quantity)   
    

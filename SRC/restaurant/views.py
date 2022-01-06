@@ -81,15 +81,14 @@ def menu_item(request,pk):
     food = Menu.objects.get(id = pk)
     if request.method == "POST":
         food = Menu.objects.get(id = pk)
-        try:
+        if request.user.is_authenticated :
             customer = request.user
-        except:
+        else:    
             device = request.COOKIES['device']
-            customer, created = Customer.objects.get_or_create(device=device)    
+            customer, created = Customer.objects.get_or_create(device=device, username = device)
         if food.quantity >= int(request.POST['quantity']):
-            addressuser, created = AddressUser.objects.get_or_create(customer = customer)
             status = OrderStatus.objects.get(status = "ordered")
-            order, created = Order.objects.get_or_create(customer_id = addressuser, status_id =status)
+            order, created = Order.objects.get_or_create(customer = customer, status_id =status)
             orderItem, created = OrderItem.objects.get_or_create(order_id=order, menu_id=food, quantity=1 )
             orderItem.quantity = request.POST['quantity']
             orderItem.save()
@@ -102,20 +101,19 @@ def menu_item(request,pk):
 
 
 def cart(request):
-    #device = request.COOKIES['device']
-    #orderItems = OrderItem.objects.filter(order_id__customer_id__customer__email =device)  
-    try:
+    if request.user.is_authenticated :
         customer = request.user
         status = OrderStatus.objects.get(status = "ordered")
-        order, created = Order.objects.get_or_create(customer_id__customer = customer, status_id =status)
-    except:
+        order, created = Order.objects.get_or_create(customer=customer, status_id =status)
+    else:  
+        print("Hiiiii")  
         device = request.COOKIES['device']
-        customer, created = Customer.objects.get_or_create(device = device)
-        print("ccccccccccccccccc",customer)
-        addressuser, created = AddressUser.objects.get_or_create(customer = customer)    
+        customer, created = Customer.objects.get_or_create(device=device, username = device)
+        
+        print(customer)
         status = OrderStatus.objects.get(status = "ordered")
-        order, created = Order.objects.get_or_create(customer_id = addressuser, status_id =status)
-    print(order.__dict__)   
+        order = Order.objects.get(customer=customer, status_id =status)
+        print(order) 
     context = {'order':order}
     return render(request,'restaurant/cart.html',context)
 	

@@ -1,0 +1,25 @@
+{% extends 'base.html' %} 
+
+{% block title %} Add Food{% endblock title %} 
+
+{% block content %}
+<br>
+
+<form method = 'POST', enctype="multipart/form-data" >
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="btn btn-success">Submit</button>
+
+</form>
+<br>
+
+<div>
+    <div class="bd-example">
+        <a href="{% url 'category_add'%}" type="button" class="btn btn-primary">Add Category</a>
+        <a href="{% url 'Foods'%}" type="button" class="btn btn-primary">Food List</a>
+        
+        </div>
+   
+</div>    
+<br>
+{% endblock content %}

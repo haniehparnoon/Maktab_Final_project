@@ -339,3 +339,23 @@ def padd_address(request,pk):
         return redirect('home_customer')
 
     return render(request,"restaurant\customer_info\padd_address.html")
+
+def ordered_history(request,pk):
+    customer = Customer.objects.get(pk = pk)
+    #ordered orders
+    status_ordered = OrderStatus.objects.get(status = "ordered")
+    ordered = Order.objects.filter(Q( customer = customer )& Q(status_id = status_ordered))
+    # sent orders
+    status_sent = OrderStatus.objects.get(status = "sent")
+    sent = Order.objects.filter(Q( customer = customer )& Q(status_id = status_sent))
+    # delivered orders
+    status_delivered = OrderStatus.objects.get(status = "delivered")
+    delivered = Order.objects.filter(Q( customer = customer )& Q(status_id = status_delivered))
+    #complete orders
+    status_complete = OrderStatus.objects.get(status = "complete")
+    complete = Order.objects.filter(Q( customer = customer )& Q(status_id = status_complete))
+    return render(request,"restaurant\customer_info\ordered_history.html",{'ordered':ordered,'sent':sent,'delivered':delivered,"complete":complete})
+
+def show_order_item(request,pk):
+    order_items = OrderItem.objects.filter(order_id = pk)
+    return render(request,"restaurant\customer_info\show_order_item.html",{"order_items":order_items})

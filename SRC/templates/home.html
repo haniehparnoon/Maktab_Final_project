@@ -60,6 +60,13 @@
     //url ro dorost konam
     var CSRF_TOKEN = '{{ csrf_token }}';
     var URL = "{% url 'home' %}"
+    $(".closee").click(function() {
+      console.log("MEOWWW")
+      $('#text_search').val('')
+      $('#branch_ul').empty()
+      $('#food_ul').empty()
+
+  });
     
     
 </script>

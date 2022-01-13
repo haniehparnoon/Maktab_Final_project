@@ -34,6 +34,8 @@ urlpatterns = [
    path("menu_branch_item/menu_item_edit/<int:pk>",MenuItemEdit.as_view(),name = "menu_item_edit"),
    path("menu_branch_item/menu_item_delete/<int:pk>",MenuItemDelete.as_view(),name = "menu_item_delete"),
    path("orders_list/<int:pk>",OrdersList.as_view(),name = "orders_list"),
+   path("edit_order/<int:pk>",EditOrder.as_view(),name = "edit_order"),
+   
 
    
    

@@ -434,8 +434,15 @@ class OrdersList(ListView):
         data['complete'] = complete_order
         data['sent'] = sent
         data['delivered'] = delivered
-
         return data
+
+@is_staff_required()    
+class EditOrder(UpdateView):
+    model = Order
+    fields =("status_id",)
+    template_name ="restaurant\manager_info\edit_order.html" 
+    success_url = reverse_lazy('home_manager')
+
    
    
 

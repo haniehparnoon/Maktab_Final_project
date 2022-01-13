@@ -3,6 +3,16 @@ $( document ).ready(function() {
     // {{test}} error
     // console.log(test) error
     console.log(URL) 
+    // $(".closee").on("click", function() {
+    //     console.log("MEOWWW")
+    //     branch_ul_tag= $('#branch_ul')
+    //     food_ul_tag= $('#food_ul')
+    //     branch_ul_tag.empty()
+    //     food_ul_tag.empty()
+       
+      
+    // });
+   
    
     
     
@@ -50,6 +60,7 @@ $( document ).ready(function() {
                     a.appendChild(link); 
                     
                     a.href = "{% url 'menurestaurant' branch.id %}"; 
+                    
                     li.append(a)
                     branch_ul_tag.append(li)
                    
@@ -75,5 +86,10 @@ $( document ).ready(function() {
                 food_ul_tag.append()
             }
             
-        }
+        };
+
+          
+  
       });
+
+      

@@ -101,13 +101,18 @@
               <a class="nav-link" href="{% url 'cart' %}">Cart</a>
             </li>
           </ul>
+          {% if  not user.is_superuser %}
           <div class="d-flex  ">
             <input class="form-control me-2" type="search" name ="search" placeholder="Search" aria-label="Search" id="text_search">
-            <div class="btn btn-outline-light formsearch" type="button">Search</button>
-          </form>
+            
+            <div class="btn btn-outline-light formsearch" type="button">Search</div>
+          
+     
+            <div class="btn btn-outline-light ms-2 closee" type="button" >Close</div>
+       </div>  
+          {% endif %}
          
-        </div>
-      </div>
+        
     </nav>
 
     <main> 

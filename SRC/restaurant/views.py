@@ -302,3 +302,40 @@ def signup_customer(request):
 
     return render(request,"restaurant\customer_info\signup_customer.html")
 
+
+
+@customer_required()
+class CustomerHome(TemplateView):
+    
+    template_name = 'restaurant\customer_info\customer_home.html'
+    
+@customer_required()
+class ShowAddress(ListView):
+    model = Address
+    template_name = 'restaurant\customer_info\show_addresses.html'
+    def get_queryset(self, *args, **kwargs):
+        return Address.objects.filter(customer_id = self.kwargs['pk'])
+
+@customer_required()
+class DeleteAddress(DeleteView):  
+    model = Address
+    template_name = "restaurant\customer_info\delete_address.html" 
+    success_url = reverse_lazy('home_customer')
+
+@customer_required()
+class EditAddress(UpdateView):
+    model = Address
+    template_name = "restaurant\customer_info\edit_address.html" 
+    fields = ('city','street','plaque')
+    success_url = reverse_lazy('home_customer')
+
+def padd_address(request,pk):
+    if request.method == "POST":
+        city = request.POST.get("city")
+        street = request.POST.get("street")
+        plaque = request.POST.get("plaque")
+        customer = Customer.objects.get(id = pk)
+        address = Address.objects.create(city = city , street = street , plaque = plaque, is_primary = False , customer_id  = customer)
+        return redirect('home_customer')
+
+    return render(request,"restaurant\customer_info\padd_address.html")

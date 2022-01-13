@@ -42,10 +42,23 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Order Status</h5>
-          <a href="#" class="btn btn-primary">show orders</a>
+          <a href="{% url 'orders_list' user.manager_branch.pk %}" class="btn btn-primary">Show Orders</a>
+         
+         
+
         </div>
       </div>
     </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Menu</h5>
+          <a href="{% url 'menu_branch_item_createview' user.pk %}" class="btn btn-primary">Add menu item</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
     <div class="col-sm-6">
       <div class="card">
         <div class="card-body">
@@ -56,5 +69,8 @@
       </div>
     </div>
   </div>
+   {% comment "" %}
+   
+    {% endcomment %}
   {% endif %}
 {% endblock content %}

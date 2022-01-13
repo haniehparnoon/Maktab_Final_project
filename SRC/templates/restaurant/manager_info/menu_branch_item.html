@@ -14,8 +14,10 @@
             <div class="card-body">
               <h5 class="card-title">{{menu.food}}</h5>
               <h5 class="card-title">price: {{menu.price}}</h5>
-              <a class="btn btn-outline-success" href="{% url 'menu_item' menu.id %}">View Product</a>
-            
+              <h5 class="card-title">price: {{menu.quantity}}</h5>
+              <a href="{% url 'menu_item_edit' menu.pk %}" class="btn btn-primary">Edit</a>
+              <a href="{% url 'menu_item_delete' menu.pk %}" class="btn btn-danger">Delete</a>
+
             </div>
           </div> 
         </div>
@@ -24,7 +26,5 @@
       {% else %}
       <p> no item</p>
       {% endif %}
-      {% comment "" %}<a href="{% url 'menu_branch_item_createview'  %}" class="btn btn-primary">Add menu item</a>
-   
-    {% endcomment %}
+     
       {% endblock content%}

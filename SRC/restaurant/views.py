@@ -415,7 +415,27 @@ class MenuItemDelete(DeleteView):
     template_name ="restaurant\manager_info\menu_item_delete.html" 
     success_url = reverse_lazy('home_manager')
 
+@is_staff_required()
+class OrdersList(ListView):
+    model = Order
+    template_name ="restaurant\manager_info\orders_list.html" 
 
+    def get_context_data(self, **kwargs):
+        status_complete = OrderStatus.objects.get(status = "complete")
+        complete_order = Order.objects.filter(Q(orderitem__menu_id__branch =self.kwargs['pk'])& Q(status_id =status_complete))
+        # sent orders
+        status_sent = OrderStatus.objects.get(status = "sent")
+        sent = Order.objects.filter(Q(orderitem__menu_id__branch =self.kwargs['pk'])& Q(status_id = status_sent))
+        # delivered orders
+        status_delivered = OrderStatus.objects.get(status = "delivered")
+        delivered = Order.objects.filter(Q(orderitem__menu_id__branch =self.kwargs['pk'])& Q(status_id = status_delivered))
+        
+        data = super().get_context_data(**kwargs)
+        data['complete'] = complete_order
+        data['sent'] = sent
+        data['delivered'] = delivered
+
+        return data
    
    
 

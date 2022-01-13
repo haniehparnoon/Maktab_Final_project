@@ -30,7 +30,12 @@ urlpatterns = [
    path("adminhome/show_branch/<int:pk>",ShowBranch.as_view(),name="show_branch"),
    path("edit_branch/<int:pk>/",EditBranch.as_view(),name = "edit_branch"),
    path("menu_branch_item/<int:pk>/",MenuBranchItem.as_view(),name = "menu_branch_item"),
-   #path("menu_branch_item/<int:pk>/menu_branch_item_createview/",MenuBranchItem.as_view(),name = "menu_branch_item_createview"),
+   path("menu_branch_item/menu_branch_item_createview/<int:pk>",MenuBranchItemCreateView.as_view(),name = "menu_branch_item_createview"),
+   path("menu_branch_item/menu_item_edit/<int:pk>",MenuItemEdit.as_view(),name = "menu_item_edit"),
+   path("menu_branch_item/menu_item_delete/<int:pk>",MenuItemDelete.as_view(),name = "menu_item_delete"),
+   path("orders_list/<int:pk>",OrdersList.as_view(),name = "orders_list"),
+
+   
    
 
    

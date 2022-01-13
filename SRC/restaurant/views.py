@@ -185,7 +185,7 @@ def cart(request):
 
 
 
-
+    addresses=''
     if request.user.is_authenticated :
         addresses = Address.objects.filter(customer_id = request.user)
         customer = request.user
@@ -340,6 +340,7 @@ def padd_address(request,pk):
 
     return render(request,"restaurant\customer_info\padd_address.html")
 
+
 def ordered_history(request,pk):
     customer = Customer.objects.get(pk = pk)
     #ordered orders
@@ -387,9 +388,36 @@ class MenuBranchItem(ListView):
     def get_queryset(self, *args, **kwargs):
         return Menu.objects.filter(branch__manager_restaurant = self.kwargs['pk'])  
 
+@is_staff_required()
 class MenuBranchItemCreateView(CreateView):
     model = Menu
+    fields = ('price','quantity','food',)
     template_name ="restaurant\manager_info\menu_branch_item_createview.html" 
+    success_url = reverse_lazy('home_manager')
+
+    def form_valid(self, form):
+        branch = Branch.objects.get(manager_restaurant = self.request.user)
+        obj = form.save(commit=False)
+        obj.branch = branch
+        obj.save()
+        return redirect('home_manager')
+
+@is_staff_required()
+class MenuItemEdit(UpdateView):
+    model = Menu
+    fields = ('price','quantity')
+    template_name ="restaurant\manager_info\menu_item_edit.html" 
+    success_url = reverse_lazy('home_manager')
+
+@is_staff_required()
+class MenuItemDelete(DeleteView):
+    model = Menu
+    template_name ="restaurant\manager_info\menu_item_delete.html" 
+    success_url = reverse_lazy('home_manager')
+
+
+   
+   
 
 
 

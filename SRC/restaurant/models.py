@@ -17,16 +17,16 @@ class Address(models.Model):
     def __str__(self):
         return self.city+"_"+self.street
 
-    def save(self, *args, **kwargs):
-        if self.is_primary:
-            try:
-                temp = Address.objects.get(is_primary=True)
-                if self != temp:
-                    self.is_primary = False
-                    self.save()
-            except Address.DoesNotExist:
-                pass
-        super(Address, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.is_primary:
+    #         try:
+    #             temp = Address.objects.get(is_primary=True)
+    #             if self != temp:
+    #                 self.is_primary = False
+    #                 self.save()
+    #         except Address.DoesNotExist:
+    #             pass
+    #     super(Address, self).save(*args, **kwargs)
              
 
 # class AddressUser(models.Model):
@@ -142,7 +142,13 @@ class Order(models.Model):
             return self.status_id.status 
     @property 
     def created_at_jalali(self):
-        return jdatetime.datetime.fromgregorian(datetime= self.created)          
+        return jdatetime.datetime.fromgregorian(datetime= self.created)   
+
+    @property
+    def get_cart_total(self):
+        orderitems = OrderItem.objects.all().filter(order_id=self.id)
+        total = sum([item.get_total for item in orderitems])
+        return total           
    
 
 class OrderItem(models.Model):
@@ -154,6 +160,11 @@ class OrderItem(models.Model):
             return self.menu_id.food.name +"_"+ self.order_id.customer.email +"_"+str(self.quantity)
         else: 
             return self.menu_id.food.name +"_"+str(self.quantity)   
+    # @property
+    # def get_total(self):
+    #     foodname = str(Food.objects.filter(food_menu__menu_order_item__order_id=self.id).values_list('name')[0][0])
+    #     total = int(Menu.objects.all().filter(orderitems_order=self.order).filter(food_food_name=foodname).values_list("price")[0][0]) * self.number
+    #     return total        
    
    
     

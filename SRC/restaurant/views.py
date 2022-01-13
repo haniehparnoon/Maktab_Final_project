@@ -387,6 +387,11 @@ class MenuBranchItem(ListView):
     def get_queryset(self, *args, **kwargs):
         return Menu.objects.filter(branch__manager_restaurant = self.kwargs['pk'])  
 
+class MenuBranchItemCreateView(CreateView):
+    model = Menu
+    template_name ="restaurant\manager_info\menu_branch_item_createview.html" 
+
+
 
 
 

@@ -359,3 +359,43 @@ def ordered_history(request,pk):
 def show_order_item(request,pk):
     order_items = OrderItem.objects.filter(order_id = pk)
     return render(request,"restaurant\customer_info\show_order_item.html",{"order_items":order_items})
+
+#_____________________________________________________________________manager_____________________________________________________________
+
+@is_staff_required()
+class ManagerHome(TemplateView):
+    template_name = 'restaurant\manager_info\manager_home.html' 
+
+@is_staff_required()
+class ShowBranch(ListView):
+    model = Branch
+    template_name = 'restaurant\manager_info\show_branch.html'
+    def get_queryset(self, *args, **kwargs):
+        return Branch.objects.filter(manager_restaurant = self.kwargs['pk'])  
+
+@is_staff_required()
+class EditBranch(UpdateView):
+    model = Branch
+    template_name = "restaurant\manager_info\edit_branch.html" 
+    fields = "__all__"
+    success_url = reverse_lazy('home_manager')
+
+@is_staff_required()
+class MenuBranchItem(ListView):
+    model = Menu
+    template_name = "restaurant\manager_info\menu_branch_item.html"
+    def get_queryset(self, *args, **kwargs):
+        return Menu.objects.filter(branch__manager_restaurant = self.kwargs['pk'])  
+
+
+
+
+
+
+
+
+    
+
+
+
+

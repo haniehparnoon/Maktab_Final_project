@@ -220,3 +220,53 @@ def cart(request):
     return render(request,'restaurant/cart.html',context)
 
 
+
+
+class OrderItemDelete(DeleteView):
+    model = OrderItem
+    template_name = 'restaurant\orderitem_delete.html'
+    success_url = reverse_lazy('cart')
+
+class OrderItemEdit(UpdateView):
+    model = OrderItem
+    fields = ('quantity',)
+    template_name = 'restaurant\orderitem_edit.html'
+    success_url = reverse_lazy('cart')
+
+class SignupBase(TemplateView):
+    template_name = "restaurant\signup_base.html"
+
+def signup_mamager (request):
+    category_list = Category.objects.all()
+    restaurant_list = Restaurnt.objects.all()
+    
+
+    if request.method == "POST":
+        email = request.POST.get("email")
+        username = request.POST.get("username")
+        password1 = request.POST.get("password1")
+        branch_name = request.POST.get("name")
+        city = request.POST.get("city")
+        addresss = request.POST.get("address")
+        branch_category = request.POST.get("branch_category")
+        restaurant = request.POST.get("restaurant")
+        description = request.POST.get("description")
+        is_primary = request.POST.get("is_primary")
+        branch_object = Category.objects.get(name = branch_category)
+        restaurant_object = Restaurnt.objects.get( name = restaurant)
+        if is_primary == "on":
+            is_primary=True
+        else :
+            is_primary = False    
+        
+        manager = RestaurantManager(email = email , username = username, password = password1)
+        manager.set_password(password1)
+        manager.save()
+        
+        branch = Branch.objects.create(name = branch_name , city = city , address = addresss, description = description ,
+          restaurant = restaurant_object, manager_restaurant = manager , branch_category = branch_object , is_primary = is_primary)
+
+        return redirect('account_login')
+
+    return render(request,"restaurant\signup_manager.html",{"categories": category_list, "restaurants":restaurant_list})
+

@@ -1,8 +1,11 @@
 {% extends 'base.html' %} 
+{% load static %}
 
 {% block title %}Home{% endblock title %} 
 
 {% block content %} 
+<ul id="branch_ul"></ul>
+<ul id="food_ul"></ul>
     <br>
     <h3>Best-Selling Foods</h3>
    
@@ -47,6 +50,18 @@
         </li>
         {% endfor %}
       </ol>
-      <br>
+      <br> 
     
 {% endblock content %}
+
+{% block script %}
+<script>
+   
+    //url ro dorost konam
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var URL = "{% url 'home' %}"
+    
+    
+</script>
+<script src={% static '/js/search.js' %}></script>
+{% endblock script %}

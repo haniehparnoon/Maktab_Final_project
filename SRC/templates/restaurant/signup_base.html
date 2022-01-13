@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<br>
+<ul class="list-group">
+    <li class="list-group-item">Choose your role:</li>
+  
+    
+    <li class="list-group-item list-group-item-primary"><a href="{% url 'signup_admin' %}"> Signup Admin</a></li>
+    
+    
+    <li class="list-group-item list-group-item-success"><a href="{% url 'signup_manager' %}"> Signup Manager</a></li>
+    
+    <li class="list-group-item list-group-item-info"><a href="{% url 'signup_customer' %}"> Signup Customer</a></li>
+  
+  </ul>
+{% endblock content %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+{% block content %}
+<br>
+<div class="container"> 
+    <form method="POST"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <p><label for="id_name">City:</label> <input type="text" name="city" maxlength="60" class="form-control" required="" id="id_name"></p>
+        <p><label for="id_name">Street:</label> <input type="text" name="street" maxlength="60" class="form-control" required="" id="id_name"></p>
+        <p><label for="id_name">Plaque:</label> <input type="number" name="plaque" maxlength="60" class="form-control" required="" id="id_name"></p>
+        <button type="submit" class="btn btn-success">Submit</button>
+        <a class="btn btn-danger" href="{% url 'show_address' user.pk %}" role="button">Close</a>
+    
+    </form>
+    <br>
+
+    </div>    
+    <br>
+    
+        </div>
+{% endblock content%} 

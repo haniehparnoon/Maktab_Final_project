@@ -4,8 +4,38 @@
 
 
 <br>
-<h1>Cart</h1>
+<div class="row ">
+	<div class="col-lg-6">
+		<h1>Cart</h1>
+	</div>	
+	<div  class="col-lg-6">
+			{% if user.is_authenticated  %}
+			{% if order.orderitem_set.all %}
+			<form method = "POST">
+			{% csrf_token %}
+			<p><label for="id_food_category"> choose Address:</label> <select name="customer_address" class="form-control" required="" id="id_food_category">
+				{% for address in  addresses %}
+				<option  >{{address.pk}}_{{address.city}}_{{address.street}}_{{address.plaque}}</option>
+			  {% endfor %}
+			</select></p>
+				<button type="submit" class="btn btn-success">Checkout</button>
+			{%endif%}	
+
+			</form>
+			{% else %}
+			<a href="{% url 'account_login' %}" class="btn btn-success">Login</a>
+			{% endif %}
+			{% if msg %}
+			<p>{{msg}}</p>
+			{% endif %}
+		
+		
+	</div>	
+</div>
+{% if order.orderitem_set.all %}
+
 {% for orderitem in order.orderitem_set.all %}
+
 <div class="row">
 	<div class="col-lg-6">
 		<img style="border:1px solid #888; width:200px ;height:200px;" src="{{orderitem.menu_id.food.image.url}}">
@@ -32,6 +62,9 @@
 	</div>
 </div>
 <hr>
+
 {% endfor %}
+{% endif %}
+
 
 {% endblock content %}

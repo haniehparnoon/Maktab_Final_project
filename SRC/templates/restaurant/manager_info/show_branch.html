@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+{% for branch in object_list %}
+<div class="card text-center">
+    <div class="card-header">
+    {{branch.restaurant}}
+      
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{branch.name}}</h5>
+      <p class="card-text">category:{{branch.branch_category}}</p>
+      <p class="card-text">description:{{branch.description}}</p>
+      <p class="card-text">address:{{branch.city}}_{{branch.address}}</p>
+      {% if is_primary %}
+      <p class="card-text">main branch</p>
+
+      {% endif %}
+
+      
+      <a href="{% url 'edit_branch' branch.pk %}" class="btn btn-primary">Edit Branch</a>
+    </div>
+    <div class="card-footer text-muted">
+      {{branch.created_at_jalali.date}}
+    </div>
+  </div>
+  {% endfor %}
+{% endblock content %}

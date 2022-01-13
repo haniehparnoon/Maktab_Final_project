@@ -1,0 +1,24 @@
+{% extends 'base.html' %} 
+{% block content %}
+<br>
+<div class="container"> 
+    <form method="POST"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <p><label for="id_email">E-mail:</label> <input type="email" name="email" placeholder="E-mail address" required="" id="id_email"></p>
+        <p><label for="id_username">Username:</label> <input type="text" name="username" placeholder="Password" required="" id="id_username"></p>
+        <p><label for="id_password1">Password:</label> <input type="password" name="password1" placeholder="Password" required="" id="id_password1"></p>
+        <p><label for="id_name">City:</label> <input type="text" name="city" maxlength="60" class="form-control" required="" id="id_name"></p>
+        <p><label for="id_name">Street:</label> <input type="text" name="street" maxlength="60" class="form-control" required="" id="id_name"></p>
+        <p><label for="id_name">Plaque:</label> <input type="number" name="plaque" maxlength="60" class="form-control" required="" id="id_name"></p>
+       
+        <button type="submit" class="btn btn-success">Submit</button>
+        <a class="btn btn-danger" href="{% url 'signup_base' %}" role="button">Close</a>
+    
+    </form>
+    <br>
+
+    </div>    
+    <br>
+    
+        </div>
+{% endblock content%} 

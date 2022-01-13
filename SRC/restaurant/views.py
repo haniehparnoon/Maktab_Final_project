@@ -282,3 +282,23 @@ def signup_admin(request):
         return redirect('account_login')
 
     return render(request,"restaurant\signup_admin.html")
+
+#___________________________________________________________Customer______________________________________________________    
+
+def signup_customer(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        username = request.POST.get("username")
+        password1 = request.POST.get("password1")
+        city = request.POST.get("city")
+        street = request.POST.get("street")
+        plaque = request.POST.get("plaque")
+        is_primary = request.POST.get("is_primary")
+        customer = Customer(email = email , username = username, password = password1)
+        customer.set_password(password1)
+        customer.save()
+        address = Address.objects.create(city = city , street = street , plaque = plaque, is_primary = True , customer_id  = customer)
+        return redirect('account_login')
+
+    return render(request,"restaurant\customer_info\signup_customer.html")
+

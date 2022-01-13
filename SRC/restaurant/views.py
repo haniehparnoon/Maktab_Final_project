@@ -270,3 +270,15 @@ def signup_mamager (request):
 
     return render(request,"restaurant\signup_manager.html",{"categories": category_list, "restaurants":restaurant_list})
 
+
+def signup_admin(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        username = request.POST.get("username")
+        password1 = request.POST.get("password1")
+        admin = Admin(email = email , username = username, password = password1)
+        admin.set_password(password1)
+        admin.save()
+        return redirect('account_login')
+
+    return render(request,"restaurant\signup_admin.html")

@@ -1,0 +1,80 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block title %}Home{% endblock title %} 
+
+{% block content %} 
+<div id="searchbar_result" class="menu-item-name" style="display:none; text-align: center">
+  <p class="msg">Restaurants List Matching Your Search: </p>
+  <dl id="branch_ul" class="p-0"></dl>
+  <p class="msg">Foods List Matching Your Search: </p>
+  <dl id="food_ul" class="p-0"></dl>
+</div>
+    <br>
+    <h3>Best-Selling Foods</h3>
+   
+      {% for best_food in  best_selling_foods %}
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{best_food.image.url}}"  style="width: 179px;height: 179px;" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{best_food.name}}</h5>
+            </div>
+          </div>
+          <a class="btn btn-outline-success" href="{% url 'menu_item_base_on_Food' best_food.id %}">View Restaurant</a>
+        </div>
+      </div>
+      {% endfor %}
+      <br>
+      
+      <h3> Best-Selling Restaurants </h3>
+      <ol class="list-group list-group-numbered">
+        {% for best_restaurant in  best_selling_restaurants %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">{{best_restaurant.name}}</div>
+          </div>
+          <a href ="{% url 'menurestaurant' best_restaurant.pk %}" class="badge bg-primary rounded-pill">menu</a>
+        </li>
+        {% endfor %}
+      </ol>
+  
+    <br>
+    <h3> All Restaurants </h3>
+    <ol class="list-group">
+        {% for branch in  object_list %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">{{branch.name}}</div>
+            Location :{{branch.city}}
+          </div>
+          <a href ="{% url 'menurestaurant' branch.pk %}" class="badge bg-primary rounded-pill">menu</a>
+        </li>
+        {% endfor %}
+      </ol>
+      <br> 
+    
+{% endblock content %}
+
+{% block script %}
+<script>
+   
+    //url ro dorost konam
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var URL = "{% url 'home' %}"
+    $(".closee").click(function() {
+      console.log("MEOWWW")
+      $('#text_search').val('')
+      $('#branch_ul').empty()
+      $('#food_ul').empty()
+      $('.msg').text('')
+
+  });
+    
+    
+</script>
+<script src={% static '/js/search.js' %}></script>
+{% endblock script %}

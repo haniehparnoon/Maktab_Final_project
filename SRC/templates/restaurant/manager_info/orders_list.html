@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+
+<div class="list-group">
+  
+
+    <a href="" class="list-group-item list-group-item-action active" aria-current="true">Sent List</a>
+    {% if sent %} 
+    {% for order in sent %}
+    <a href="{% url 'show_order_item' order.pk %}" class="list-group-item list-group-item-action " aria-current="true">{{order.created_at_jalali.date}} </a> 
+    <a href="{% url 'edit_order' order.pk %}" class="btn btn-secondary">Edit status</a>
+    
+    {% endfor %} 
+    {% else %}
+    <p>no item</p>  
+    {% endif %} 
+
+    <a href="" class="list-group-item list-group-item-action active" aria-current="true">Delivered List</a>
+    {% if delivered %}
+    {% for order in delivered %}
+    <a href="{% url 'show_order_item' order.pk %}"class="list-group-item list-group-item-action " aria-current="true">{{order.created_at_jalali.date}} </a> 
+    {% comment %} <a href="{% url 'edit_order' order.pk %}" class="btn btn-secondary">Edit status</a> {% endcomment %}
+    {% endfor %} 
+    {% else %}
+    <p>no item</p>  
+    {% endif %}  
+
+    <a href="" class="list-group-item list-group-item-action active" aria-current="true">Complete List</a>
+    {% if complete %}
+    {% for order in complete %}
+    <a href="{% url 'show_order_item' order.pk %}" class="list-group-item list-group-item-action " aria-current="true">{{order.created_at_jalali.date}} </a> 
+    <a href="{% url 'edit_order' order.pk %}" class="btn btn-secondary">Edit status</a>
+    {% endfor %} 
+    {% else %}
+    <p>no item</p>  
+    {% endif %}  
+    
+   </div>
+{% endblock content %}

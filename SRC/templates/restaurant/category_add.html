@@ -1,0 +1,14 @@
+{% extends 'base.html' %} 
+<br>
+
+{% block title %} Add Category{% endblock title %} 
+
+{% block content %}
+<br>
+
+<form method = 'POST', enctype="multipart/form-data" >
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+{% endblock content %}

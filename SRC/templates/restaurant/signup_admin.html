@@ -1,0 +1,23 @@
+{% extends 'base.html' %} 
+{% block content %}
+<br>
+<h3>Signup Manager</h3>
+<br>
+<div class="container"> 
+    <form method="POST"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <p><label for="id_email">E-mail:</label> <input type="email" name="email" placeholder="E-mail address" required="" id="id_email"></p>
+        <p><label for="id_username">Username:</label> <input type="text" name="username" placeholder="Password" required="" id="id_username"></p>
+        <p><label for="id_password1">Password:</label> <input type="password" name="password1" placeholder="Password" required="" id="id_password1"></p>
+       
+        <button type="submit" class="btn btn-success">Submit</button>
+        <a class="btn btn-danger" href="{% url 'signup_base' %}" role="button">Close</a>
+    
+    </form>
+    <br>
+
+    </div>    
+    <br>
+    
+        </div>
+{% endblock content%} 

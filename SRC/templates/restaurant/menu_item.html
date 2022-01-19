@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<div class="row">
+	<div class="col-lg-6">
+		<img style="border:1px solid #888; width:200px ;height:200px;" src="{{food.food.image.url}}">
+	</div>
+
+	<div style="padding:50px" class="col-lg-6">
+
+		<h3>{{food.food}}</h3>
+		<hr>
+		{% if message %}
+		<p> {{message}}</p>
+		{% endif %}
+		
+		<form method="POST" action="{% url 'menu_item' food.id %}">
+			{% csrf_token %}
+			<input min="1" value=1 type="number" name="quantity">
+			<input class="btn btn-dark" type="submit" value="Add to Cart">
+		</form>
+
+		<h2>Price: ${{food.price}}</h2>
+	</div>
+</div>
+
+
+{% endblock content%}

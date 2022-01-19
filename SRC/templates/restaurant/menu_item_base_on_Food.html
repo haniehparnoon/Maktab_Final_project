@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+    
+    
+    {% for menu in  object_list %}
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{menu.food.image.url}}"  style="width: 179px;height: 179px;" class="img-fluid rounded-start" alt="...">
+          </div> 
+          <div class="col-md-8">
+            <div class="card-body">
+            <h4 class="card-title">Restaurant:{{menu.branch}}</h4>  
+              <h6 class="card-title">{{menu.food}}</h6>
+              <h6 class="card-title">price: {{menu.price}}</h6>
+              <h6 class="card-title">Remaining: {{menu.quantity}}</h6>
+              <a class="btn btn-outline-success" href="{% url 'menu_item' menu.id %}">View Product</a>
+              
+            
+            </div>
+          </div> 
+        </div>
+      </div>
+      {% endfor %}
+      <a class="btn btn-outline-secondary" href="{% url 'home'%}">Back</a>
+{% endblock content%}      
+   

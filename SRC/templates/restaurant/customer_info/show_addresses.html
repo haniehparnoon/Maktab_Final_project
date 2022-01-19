@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<ol class="list-group list-group-numbered">
+    {% for address in object_list %}
+    <li class="list-group-item d-flex justify-content-between align-items-start">
+      <div class="ms-2 me-auto">
+        
+        <div class="fw-bold">{{address.city}},{{address.street}},{{address.plaque}},main:{{address.is_primary}}</div>
+      </div>
+      {% if not address.is_primary %}
+      <a href="{% url 'delete_address' address.pk%}" class="btn btn-danger me-2">DELET</a>
+      {% endif %}
+      
+	  <a href="{% url 'edit_address' address.pk%}"  class="btn btn-primary">Edit</a>
+
+		
+      
+    </li>
+    {% endfor %}
+  </ol>
+
+
+{% endblock content %}

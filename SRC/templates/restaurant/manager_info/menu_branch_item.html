@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+{% if object_list %}
+    <p class="card-text"> Restaurant Name :{{object_list.0.branch}}</p>
+    
+    {% for menu in  object_list %}
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{menu.food.image.url}}"  style="width: 179px;height: 179px;" class="img-fluid rounded-start" alt="...">
+          </div> 
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{menu.food}}</h5>
+              <h5 class="card-title">price: {{menu.price}}</h5>
+              <h5 class="card-title">price: {{menu.quantity}}</h5>
+              <a href="{% url 'menu_item_edit' menu.pk %}" class="btn btn-primary">Edit</a>
+              <a href="{% url 'menu_item_delete' menu.pk %}" class="btn btn-danger">Delete</a>
+
+            </div>
+          </div> 
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <p> no item</p>
+      {% endif %}
+     
+      {% endblock content%}

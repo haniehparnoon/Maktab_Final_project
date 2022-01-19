@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method = "POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <p>Are you sure?</p>
+    <button class="btn btn-danger">DELET</button>
+    <a href="{% url 'home_manager' %}" class="btn btn-secondary">close</a>
+</form>    
+{% endblock content %}

@@ -11,11 +11,7 @@ class FoodSerializer(serializers.ModelSerializer):
         model = Food
         fields = ['id', 'name'] 
 
-class MenuSerializer(serializers.ModelSerializer):
-    food = FoodSerializer
-    class Meta:
-        model = Menu
-        fields = ['food','branch'] 
+ 
 
 
         

@@ -17,16 +17,20 @@ class Address(models.Model):
     def __str__(self):
         return self.city+"_"+self.street
 
-    # def save(self, *args, **kwargs):
-    #     if self.is_primary:
-    #         try:
-    #             temp = Address.objects.get(is_primary=True)
-    #             if self != temp:
-    #                 self.is_primary = False
-    #                 self.save()
-    #         except Address.DoesNotExist:
-    #             pass
-    #     super(Address, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+            primary_address = Address.objects.filter(is_primary=True,customer_id = self.customer_id)
+
+            if self.is_primary:
+                if primary_address:
+                    primary_address.update(is_primary = False)  
+            
+            else:
+                if primary_address and primary_address.values_list('id')[0][0] != self.id:
+                    pass
+                else:
+                    self.is_primary = True
+
+            super(Address, self).save(*args, **kwargs)    
              
 
 # class AddressUser(models.Model):
@@ -81,17 +85,21 @@ class Branch(models.Model):
     def __str__(self):
         return self.name
 
+          
     def save(self, *args, **kwargs):
-        if self.is_primary:
-            try:
-                temp = Branch.objects.get(is_primary=True)
-                if self != temp:
-                    self.is_primary = False
-                    self.save()
-            except Branch.DoesNotExist:
-                pass
-        super(Branch, self).save(*args, **kwargs)
+            primary_branch = Branch.objects.filter(is_primary=True,restaurant = self.restaurant)
 
+            if self.is_primary:
+                if primary_branch:
+                    primary_branch.update(is_primary = False)  
+            
+            else:
+                if primary_branch and primary_branch.values_list('id')[0][0] != self.id:
+                    pass
+                else:
+                    self.is_primary = True
+
+            super(Branch, self).save(*args, **kwargs)  
     @property 
     def created_at_jalali(self):
         return jdatetime.datetime.fromgregorian(datetime= self.created)    
@@ -134,6 +142,7 @@ class Order(models.Model):
     customer = models.ForeignKey("accounts.Customer", on_delete=models.CASCADE,related_name = "customer_order")
     created = models.DateTimeField(auto_now_add=True)
     status_id = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, related_name='status_order')
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL,null=True,blank=True)
     
     def __str__(self):
         if self.customer.email:
@@ -146,9 +155,11 @@ class Order(models.Model):
 
     @property
     def get_cart_total(self):
-        orderitems = OrderItem.objects.all().filter(order_id=self.id)
-        total = sum([item.get_total for item in orderitems])
-        return total           
+        orderitems = OrderItem.objects.filter(order_id=self.id)
+        if orderitems:
+            return sum([item.get_total_price for item in orderitems]) 
+        else:
+            return 0          
    
 
 class OrderItem(models.Model):
@@ -159,12 +170,15 @@ class OrderItem(models.Model):
         if self.order_id.customer.email: 
             return self.menu_id.food.name +"_"+ self.order_id.customer.email +"_"+str(self.quantity)
         else: 
-            return self.menu_id.food.name +"_"+str(self.quantity)   
-    # @property
-    # def get_total(self):
-    #     foodname = str(Food.objects.filter(food_menu__menu_order_item__order_id=self.id).values_list('name')[0][0])
-    #     total = int(Menu.objects.all().filter(orderitems_order=self.order).filter(food_food_name=foodname).values_list("price")[0][0]) * self.number
-    #     return total        
+            return self.menu_id.food.name +"_"+str(self.quantity)  
+
+    @property
+    def get_total_price(self):
+        menu_price = Menu.objects.filter(id=self.menu_id.id).values_list("price")[0][0]
+        print("pppppppppppp",menu_price)
+        return menu_price * self.quantity  
+               
+          
    
    
     

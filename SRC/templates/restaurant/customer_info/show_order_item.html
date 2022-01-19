@@ -14,7 +14,14 @@
 </div>
 
 {% if order_items %}
+{% for order in order_items%}
+{% if forloop.counter0 <= 0 %}
+<h1>Total Price :{{order.order_id.get_cart_total}}</h1>
+{% endif %}
+{% endfor %}
 {% for order in order_items %}
+
+
 <div class="card text-center">
     <div class="card-header">
         item{{ forloop.counter }}
@@ -22,8 +29,9 @@
     </div>
     <div class="card-body">
       <h5 class="card-title">{{order.menu_id.food.name }}</h5>
-      <p class="card-text">price:{{order.menu_id.price}}</p>
-      <p class="card-text">quantity:{{order.menu_id.quantity}}</p>
+    
+      <p class="card-text">Item Total Price:{{order.get_total_price}}</p>
+      <p class="card-text">quantity:{{order.quantity}}</p>
     </div>
    
   </div>

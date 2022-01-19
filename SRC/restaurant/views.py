@@ -9,28 +9,29 @@ from .models import *
 from accounts.models import *
 from .decorators import superuser_required, is_staff_required, customer_required
 from django.db.models.aggregates import Count, Sum
-from .forms import FoodForm, CategoryForm
+from .forms import FoodForm, CategoryForm, OrderForm
 import jdatetime
 from django.db.models import Q
 from django.http import JsonResponse
 from .serializers import *
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 @superuser_required()
-class AdminHome(CreateView):
+class AdminHome(LoginRequiredMixin,CreateView):
     model = Food
     template_name = 'restaurant\home_admin.html'
     form_class = FoodForm
     success_url = reverse_lazy('Foods')
 
 @superuser_required()
-class FoodList(ListView):
+class FoodList(LoginRequiredMixin,ListView):
     model = Food
     template_name = 'restaurant\Foods.html'
 
 @superuser_required()
-class EditFood(UpdateView):
+class EditFood(LoginRequiredMixin,UpdateView):
     model = Food
     form_class = FoodForm
     template_name = 'restaurant\editfood.html'
@@ -38,13 +39,13 @@ class EditFood(UpdateView):
 
 
 @superuser_required()
-class DeleteFood(DeleteView):
+class DeleteFood(LoginRequiredMixin,DeleteView):
     model = Food
     template_name = 'restaurant\deletefood.html'
     success_url = reverse_lazy('Foods')
 
 @superuser_required()
-class AddCategory(CreateView):
+class AddCategory(LoginRequiredMixin,CreateView):
     model = Category
     template_name = 'restaurant\category_add.html'
     form_class = CategoryForm
@@ -86,6 +87,7 @@ class BranchList(ListView,APIView):
                     serializer_branch = BranchSerializer(branch,many=True,context={'request': request})
                     branches = serializer_branch.data    
                     print("BBBBBBBBBBBBB:",branches)
+                    
                 
                 if food:
                     serializer_food = FoodSerializer(food,many=True,context={'request': request})
@@ -99,15 +101,23 @@ class BranchList(ListView,APIView):
                 Response({"branches":[] , "foods":[],"msg":"does not match"})
               
 
-        return render(req,'home.html')   
+        return render(req,'home.html') 
+
+#وقتی غدایی رو سرچ کرد منوایتم هایی که اون غدا رو دارن نشون بده
+
+class MenuItemBaseOnFood(ListView):
+    model = Menu 
+    template_name = "restaurant\menu_item_base_on_Food.html"
+    def get_queryset(self, *args, **kwargs):
+        return Menu.objects.filter(food=self.kwargs['pk'])
 
 
 
 
 
+#@is_staff_required()
 class menuRestaurant(ListView):
     model = Menu
-      
     template_name = 'restaurant\menurestaurant.html'
     def get_queryset(self, *args, **kwargs):
         return Menu.objects.filter(branch=self.kwargs['pk'])
@@ -139,7 +149,7 @@ def menu_item(request,pk):
             existed_branch = Branch.objects.get(menu__menu_order_item =order_item_existed)
 
             if selected_food  in   existed_food:
-                context = {'food':food, 'message':"this item already exist:/"}
+                context = {'food':food, 'message':"this item already exist in your cart you can edit this item in your cart:/"}
                 return render(request,'restaurant\menu_item.html',context)
 
         if existed_branch and not selected_branch.name == existed_branch.name:
@@ -169,7 +179,7 @@ def menu_item(request,pk):
 def cart(request):
     if request.method == "POST":
         customer_address = request.POST.get("customer_address")
-        pk,city,street,number =customer_address.split("_")
+        pk,city,street,number,is_primary =customer_address.split("_")
         print(pk)
         choosen_address = Address.objects.get(pk = pk)
         print(choosen_address)
@@ -310,23 +320,23 @@ class CustomerHome(TemplateView):
     template_name = 'restaurant\customer_info\customer_home.html'
     
 @customer_required()
-class ShowAddress(ListView):
+class ShowAddress(LoginRequiredMixin,ListView):
     model = Address
     template_name = 'restaurant\customer_info\show_addresses.html'
     def get_queryset(self, *args, **kwargs):
         return Address.objects.filter(customer_id = self.kwargs['pk'])
 
 @customer_required()
-class DeleteAddress(DeleteView):  
+class DeleteAddress(LoginRequiredMixin,DeleteView):  
     model = Address
     template_name = "restaurant\customer_info\delete_address.html" 
     success_url = reverse_lazy('home_customer')
 
 @customer_required()
-class EditAddress(UpdateView):
+class EditAddress(LoginRequiredMixin,UpdateView):
     model = Address
     template_name = "restaurant\customer_info\edit_address.html" 
-    fields = ('city','street','plaque')
+    fields = ('city','street','plaque','is_primary',)
     success_url = reverse_lazy('home_customer')
 
 def padd_address(request,pk):
@@ -364,7 +374,7 @@ def show_order_item(request,pk):
 #_____________________________________________________________________manager_____________________________________________________________
 
 @is_staff_required()
-class ManagerHome(TemplateView):
+class ManagerHome(LoginRequiredMixin,TemplateView):
     template_name = 'restaurant\manager_info\manager_home.html' 
 
 @is_staff_required()
@@ -375,21 +385,21 @@ class ShowBranch(ListView):
         return Branch.objects.filter(manager_restaurant = self.kwargs['pk'])  
 
 @is_staff_required()
-class EditBranch(UpdateView):
+class EditBranch(LoginRequiredMixin,UpdateView):
     model = Branch
     template_name = "restaurant\manager_info\edit_branch.html" 
     fields = "__all__"
     success_url = reverse_lazy('home_manager')
 
 @is_staff_required()
-class MenuBranchItem(ListView):
+class MenuBranchItem(LoginRequiredMixin,ListView):
     model = Menu
     template_name = "restaurant\manager_info\menu_branch_item.html"
     def get_queryset(self, *args, **kwargs):
         return Menu.objects.filter(branch__manager_restaurant = self.kwargs['pk'])  
 
 @is_staff_required()
-class MenuBranchItemCreateView(CreateView):
+class MenuBranchItemCreateView(LoginRequiredMixin,CreateView):
     model = Menu
     fields = ('price','quantity','food',)
     template_name ="restaurant\manager_info\menu_branch_item_createview.html" 
@@ -403,20 +413,20 @@ class MenuBranchItemCreateView(CreateView):
         return redirect('home_manager')
 
 @is_staff_required()
-class MenuItemEdit(UpdateView):
+class MenuItemEdit(LoginRequiredMixin,UpdateView):
     model = Menu
     fields = ('price','quantity')
     template_name ="restaurant\manager_info\menu_item_edit.html" 
     success_url = reverse_lazy('home_manager')
 
 @is_staff_required()
-class MenuItemDelete(DeleteView):
+class MenuItemDelete(LoginRequiredMixin,DeleteView):
     model = Menu
     template_name ="restaurant\manager_info\menu_item_delete.html" 
     success_url = reverse_lazy('home_manager')
 
 @is_staff_required()
-class OrdersList(ListView):
+class OrdersList(LoginRequiredMixin,ListView):
     model = Order
     template_name ="restaurant\manager_info\orders_list.html" 
 
@@ -436,15 +446,15 @@ class OrdersList(ListView):
         data['delivered'] = delivered
         return data
 
-@is_staff_required()    
-class EditOrder(UpdateView):
+   
+class EditOrder(LoginRequiredMixin,UpdateView):
     model = Order
-    fields =("status_id",)
+    form_class = OrderForm
     template_name ="restaurant\manager_info\edit_order.html" 
     success_url = reverse_lazy('home_manager')
-
-   
-   
+    
+    
+    
 
 
 

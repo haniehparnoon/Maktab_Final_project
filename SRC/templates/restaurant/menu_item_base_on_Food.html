@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <br>
-    <p class="card-text"> Restaurant Name :{{object_list.0.branch}}</p>
+    
     
     {% for menu in  object_list %}
     <div class="card mb-3" style="max-width: 540px;">
@@ -11,8 +11,10 @@
           </div> 
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">{{menu.food}}</h5>
-              <h5 class="card-title">price: {{menu.price}}</h5>
+            <h4 class="card-title">Restaurant:{{menu.branch}}</h4>  
+              <h6 class="card-title">{{menu.food}}</h6>
+              <h6 class="card-title">price: {{menu.price}}</h6>
+              <h6 class="card-title">Remaining: {{menu.quantity}}</h6>
               <a class="btn btn-outline-success" href="{% url 'menu_item' menu.id %}">View Product</a>
               
             
@@ -21,6 +23,6 @@
         </div>
       </div>
       {% endfor %}
-   
       <a class="btn btn-outline-secondary" href="{% url 'home'%}">Back</a>
-      {% endblock content%}
+{% endblock content%}      
+   

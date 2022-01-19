@@ -11,6 +11,7 @@
 	<div  class="col-lg-6">
 			{% if user.is_authenticated  %}
 			{% if order.orderitem_set.all %}
+			<a href="{% url 'padd_address' user.pk %}" class="btn btn-primary">Add Address</a>
 			<form method = "POST">
 			{% csrf_token %}
 			<p><label for="id_food_category"> choose Address:</label> <select name="customer_address" class="form-control" required="" id="id_food_category">
@@ -18,10 +19,12 @@
 				<option  >{{address.pk}}_{{address.city}}_{{address.street}}_{{address.plaque}}</option>
 			  {% endfor %}
 			</select></p>
+
 				<button type="submit" class="btn btn-success">Checkout</button>
 			{%endif%}	
 
 			</form>
+			
 			{% else %}
 			<a href="{% url 'account_login' %}" class="btn btn-success">Login</a>
 			{% endif %}
@@ -33,6 +36,8 @@
 	</div>	
 </div>
 {% if order.orderitem_set.all %}
+<h2> Total Price:{{order.get_cart_total}}</h2>
+<hr>
 
 {% for orderitem in order.orderitem_set.all %}
 
@@ -45,8 +50,8 @@
 
 		<h3>{{orderitem.menu_id.food.name}}</h3>
 		<hr>
-		<h2>Price: {{orderitem.menu_id.price}}</h2>
-		<h3>Quantity: {{orderitem.quantity}}</h3>  
+		<h4>Total Item Price: {{orderitem.get_total_price}}</h4>
+		<h4>Quantity: {{orderitem.quantity}}</h4>  
 		
 		<a href="{% url 'orderitem_delete' orderitem.pk %}" class="btn btn-danger">DELET</a>
 		<a href="{% url 'orderitem_edit' orderitem.pk %}" class="btn btn-primary">Edit</a>
@@ -58,13 +63,22 @@
 		</form>
 		<a href="{% url 'food_edit' food.pk %}" class="btn btn-primary">Edit</a>
 		 {% endcomment %}
+		
 
 	</div>
 </div>
 <hr>
 
+
+
+{% endfor %}
+{% for orderitem in order.orderitem_set.all %}
+{% if forloop.counter0 == 0 %}
+<a href="{% url 'menurestaurant' orderitem.menu_id.pk %}" class="btn btn-secondary">Back To Menu</a>
+{% endif %}
 {% endfor %}
 {% endif %}
+
 
 
 {% endblock content %}
